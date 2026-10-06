@@ -1,0 +1,10 @@
+const router = require('express').Router();
+const controller = require('../controllers/adminController');
+const { auth, requireRole } = require('../middleware/auth');
+router.post('/login', controller.login);
+router.post('/content', auth(), requireRole('admin','editor'), controller.createContent);
+router.patch('/content/:id', auth(), requireRole('admin','editor'), controller.updateContent);
+router.delete('/content/:id', auth(), requireRole('admin'), controller.deleteContent);
+router.post('/ccls', auth(), requireRole('admin'), controller.createCcl);
+router.patch('/ccls/:id', auth(), requireRole('admin','editor'), controller.updateCcl);
+module.exports = router;

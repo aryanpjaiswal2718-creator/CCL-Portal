@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCL Portal Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 40px; }
+        .container { max-width: 900px; margin: auto; }
+        h1 { color: #38bdf8; text-align: center; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 30px; }
+        .card { background: #1e293b; border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .card h3 { margin-top: 0; color: #7dd3fc; }
+        .card p { color: #94a3b8; font-size: 14px; line-height: 1.5; }
+        .location { font-size: 12px; color: #cbd5e1; background: #334155; padding: 4px 8px; display: inline-block; border-radius: 4px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CCL Portal Dashboard</h1>
+        <div id="ccl-container" class="grid">Loading labs...</div>
+    </div>
+
+    <script>
+        fetch('/api/ccls')
+            .then(res => res.json())
+            .then(data => {
+                const container = document.getElementById('ccl-container');
+                container.innerHTML = '';
+                
+                data.forEach(ccl => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <h3>${ccl.name}</h3>
+                        <p>${ccl.description}</p>
+                        <div class="location">📍 ${ccl.location}</div>
+                    `;
+                    container.appendChild(card);
+                });
+            })
+            .catch(err => {
+                document.getElementById('ccl-container').innerHTML = '<p style="color: #ef4444;">Failed to load data from backend server.</p>';
+                console.error(err);
+            });
+    </script>
+</body>
+</html>
